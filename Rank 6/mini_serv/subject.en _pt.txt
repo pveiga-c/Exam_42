@@ -1,0 +1,42 @@
+Assignment name  : mini_serv
+Expected files   : mini_serv.c
+Allowed functions: write, close, select, socket, accept, listen, send, recv, bind, strstr, malloc, realloc, free, calloc, bzero, atoi, sprintf, strlen, exit, strcpy, strcat, memset
+--------------------------------------------------------------------------------
+
+Escreva um programa que irá escutar a ligação do cliente numa determinada porta em 127.0.0.1 e permitir que os clientes falem entre si
+
+Este programa tomará como primeiro argumento a porta à qual ligar
+Se não for fornecido nenhum argumento, deverá escrever em stderr "Número errado de argumentos" seguido de \n e sair com o estado 1
+Se uma chamada de sistema devolver um erro antes do programa começar a aceitar a ligação, deverá escrever em stderr "Erro fatal" seguido de \n e sair com o estado 1
+Se não conseguir alocar memória, deve escrever em stderr "Erro fatal" seguido de \n e sair com o estado 1
+
+O seu programa deve ser sem bloqueio, mas o cliente pode ser preguiçoso e se não ler a sua mensagem NÃO deve desligá-lo...
+
+O seu programa não deve conter #define preproc
+O seu programa deve ouvir apenas 127.0.0.1
+O fd que receberá já estará configurado para fazer 'recv' ou 'send' para bloquear se o select não tiver sido chamado antes de os chamar, mas não bloqueará caso contrário.
+
+Quando um cliente se liga ao servidor:
+- o cliente receberá um ID. o primeiro cliente receberá o id 0 e cada novo cliente receberá o último id do cliente + 1
+- %d será substituído por este número
+- é enviada uma mensagem para todos os clientes que estavam ligados ao servidor: "servidor: cliente %d acabou de chegar\n"
+
+os clientes devem ser capazes de enviar mensagens para o seu programa.
+- a mensagem conterá apenas caracteres imprimíveis, não há necessidade de verificar
+- uma única mensagem pode conter vários \n
+- quando o servidor receber uma mensagem, deverá reenviá-la para todos os outros clientes com "client %d: " antes de cada linha!
+
+Quando um cliente se desliga do servidor:
+- é enviada uma mensagem para todos os clientes que estavam ligados ao servidor: "servidor: cliente %d acabou de sair\n"
+
+Fugas de memória ou fd são proibidas
+
+Para o ajudar, encontrará o ficheiro main.c com o início de um servidor e talvez algumas funções úteis. (Cuidado, este ficheiro usa funções proibidas ou escreve coisas que não devem estar presentes no seu programa final)
+
+Atenção, o nosso testador espera que envie as mensagens o mais rapidamente possível. Não faça buffer desnecessário.
+
+A avaliação pode demorar um pouco mais do que o normal...
+
+Dica: pode usar o nc para testar o seu programa
+Dica: deve usar o nc para testar o seu programa
+Dica: Para testar pode usar fcntl(fd, F_SETFL, O_NONBLOCK) mas use select e NUNCA verifique EAGAIN (man 2 send)
